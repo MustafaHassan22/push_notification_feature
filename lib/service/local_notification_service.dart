@@ -37,9 +37,13 @@ class LocalNotificationService {
   // android notification channel configuration
   final _androidChannel = AndroidNotificationChannel(
     'channel_id',
-    'channel name',
-    description: 'android push notification channel',
+    'Push Notifications',
+    description: 'Important notifications from the app',
     importance: Importance.max,
+
+    showBadge: true,
+    playSound: true,
+    enableVibration: true,
   );
 
   //flag to track initialization status
@@ -97,12 +101,36 @@ class LocalNotificationService {
       _androidChannel.id,
       _androidChannel.name,
       channelDescription: _androidChannel.description,
-      priority: Priority.high,
+      priority: Priority.max,
       importance: Importance.max,
+      showWhen: true,
+      when: DateTime.now().millisecondsSinceEpoch,
+      usesChronometer: false,
+      chronometerCountDown: false,
+      showProgress: false,
+      maxProgress: 0,
+      progress: 0,
+      indeterminate: false,
+      channelShowBadge: true,
+      onlyAlertOnce: false,
+      ongoing: false,
+      silent: false,
+      autoCancel: true,
+      fullScreenIntent: true,
+      category: AndroidNotificationCategory.message,
+      visibility: NotificationVisibility.public,
+      timeoutAfter: null,
+      icon: '@mipmap/ic_launcher',
+      styleInformation: BigTextStyleInformation(''),
     );
 
     //ios-specific notification details
-    DarwinNotificationDetails iosDetails = DarwinNotificationDetails();
+    DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      badgeNumber: 1,
+    );
 
     //combine platform-specific details
     final notificationDetails = NotificationDetails(
@@ -113,8 +141,8 @@ class LocalNotificationService {
     //display the notification
     await _flutterLocalNotificationsPlugin.show(
       _notificationIdCounter++,
-      title,
-      body,
+      title ?? 'Notification',
+      body ?? 'You have a new message',
       notificationDetails,
       payload: payload,
     );
